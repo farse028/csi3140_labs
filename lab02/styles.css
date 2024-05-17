@@ -25,7 +25,7 @@ section h2 {
     color: #333;
 }
 
-.summary p, .education p, .skills ul, .experience article {
+.summary p, .education p, .education h3, .skills ul, .experience article {
     margin-left: 20px;
 }
 
