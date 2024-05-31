@@ -1,5 +1,6 @@
 // Assuming pacmanIndex is a global variable that tracks the position of Pacman
 let pacmanIndex;
+let score = 0;
 
 function createGame(n) {
   const gameArray = new Array(n).fill('.');
@@ -22,29 +23,35 @@ function createGame(n) {
   return gameArray;
 }
 
-function moveLeft(gameArray) {
-  if (pacmanIndex > 0) {
-    gameArray[pacmanIndex] = '.';
-    pacmanIndex -= 1;
-    gameArray[pacmanIndex] = 'C';
+function movePacman(gameArray, direction) {
+    const newPosition = pacmanIndex + direction;
+    if (newPosition >= 0 && newPosition < gameArray.length) {
+      if (gameArray[newPosition] === '.') {
+        score++; // Increment score for eating a pellet
+      }
+      gameArray[pacmanIndex] = '_'; // Clear Pacman's old position
+      pacmanIndex = newPosition; // Update Pacman's position
+      gameArray[pacmanIndex] = 'C'; // Place Pacman in the new position
+    }
   }
-  return gameArray;
+
+function moveLeft(gameArray) {
+    movePacman(gameArray, -1);
 }
 
 function moveRight(gameArray) {
-  if (pacmanIndex < gameArray.length - 1) {
-    gameArray[pacmanIndex] = '.';
-    pacmanIndex += 1;
-    gameArray[pacmanIndex] = 'C';
-  }
-  return gameArray;
+    movePacman(gameArray, 1);
 }
 
 // Example usage:
 const game = createGame(10);
 console.log('Initial game:', game);
-console.log('After moving left:', moveLeft(game));
-console.log('After moving right:', moveRight(game));
+moveLeft(game);
+console.log('After moving left:', game);
+console.log('Score:', score);
+moveRight(game);
+console.log('After moving right:', game);
+console.log('Score:', score);
 
   
   function renderGame(game) {
@@ -56,6 +63,8 @@ console.log('After moving right:', moveRight(game));
       pieceElement.classList.add('game-piece');
       gameBoard.appendChild(pieceElement);
     });
+    scoreText = document.getElementById('score');
+    scoreText.innerHTML = "Score: " + score;
   }
   
   // Render the game with 10 pieces
