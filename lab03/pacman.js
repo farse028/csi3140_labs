@@ -4,6 +4,7 @@ let score = 0;
 let level = 1;
 let gameArray;
 let gameBoard;
+let ghostIndex;
 
 function createGame(n) {
   gameArray = new Array(n).fill('.');
@@ -11,7 +12,6 @@ function createGame(n) {
   gameArray[pacmanIndex] = 'C';
 
   // Place Ghost and Fruit in random positions
-  let ghostIndex;
   do {
     ghostIndex = Math.floor(Math.random() * n);
   } while (ghostIndex === pacmanIndex);
@@ -60,8 +60,11 @@ function moveRight(gameArray) {
     movePacman(gameArray, 1);
 }
 
+// Set an interval to move the ghost every 2 seconds
+setInterval(moveGhost, 2000);
+
 // Example usage:
-const game = createGame(10);
+gameArray = createGame(10);
 // console.log('Initial game:', game);
 // moveLeft(game);
 // console.log('After moving left:', game);
@@ -69,6 +72,20 @@ const game = createGame(10);
 // moveRight(game);
 // console.log('After moving right:', game);
 // console.log('Score:', score);
+
+function moveGhost() {
+  const direction = Math.random() < 0.5 ? -1 : 1; // Randomly choose left or right
+  const newPosition = ghostIndex + direction;
+
+  // Check if the new position is within the bounds of the game array
+  if (newPosition >= 0 && newPosition < gameArray.length && newPosition !== pacmanIndex) {
+    gameArray[ghostIndex] = '.'; // Clear the ghost's old position
+    ghostIndex = newPosition; // Update the ghost's position
+    gameArray[ghostIndex] = '^'; // Place the ghost in the new position
+  }
+
+  renderGame(gameArray);
+}
 
   
   function renderGame(game) {
@@ -103,5 +120,5 @@ const game = createGame(10);
   document.addEventListener('keydown', handleKeyPress);
   
   // Render the game with 10 pieces
-  renderGame(game);
+  renderGame(gameArray);
   
